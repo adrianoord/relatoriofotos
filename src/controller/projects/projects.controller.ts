@@ -36,7 +36,11 @@ export class ProjectsController {
     @Post('generate/:project')
     async genDoc(@Param('project') project: string, @Res() res: Response) {
         this.projectsService.createProject(project)
-        .then(()=>res.status(201).send())
+        .then((path: string)=>{
+            res.status(201).json({
+                path
+            });
+        })
         .catch(()=>res.status(409).send())
     }
 }

@@ -99,7 +99,7 @@ export class ProjectsService {
     }
 
     public createProject(name: string) {
-        return new Promise<void>(async (resolve, reject)=>{
+        return new Promise<string | void>(async (resolve, reject)=>{
             await this.updateProjects();
             if(!fs.existsSync(`${process.cwd()}\\projects\\${name}`))
             {
@@ -110,7 +110,7 @@ export class ProjectsService {
                 fs.mkdirSync(`${process.cwd()}\\projects\\${name}`);
                 this.database.insert(newProject);
                 await this.updateProjects();
-                resolve();
+                resolve(`${process.cwd()}\\projects\\${name}`);
             }
             else{
                 reject();
