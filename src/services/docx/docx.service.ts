@@ -284,8 +284,25 @@ export class DocxService {
         console.log('Documento montado!');
         console.log('Criando docx - pode demorar bastante...');
         try {
-            const buffer = await Packer.toBuffer(doc);
-            fs.writeFileSync(join(process.cwd(),`${projectName}.docx`), buffer);
+            const buffer = await Packer.toStream(doc);
+            let to_stream   = fs.createWriteStream(join(process.cwd(),`${projectName}.docx`));
+
+            let written = 0;
+            const promises = await Promise.all([
+                new Promise((resolve)=>{
+                    let timeout = setTimeout(resolve, 1000);
+                    buffer.on('data', data => {
+                        // do the piping manually here.
+                        to_stream.write(data, () => {
+                            written += data.length;
+                            console.log(`written ${written}`);
+                            clearTimeout(timeout);
+                            timeout = setTimeout(resolve, 1000);
+                        });
+                    });
+                })
+            ])
+            to_stream.close();
             console.log('Docx Criado!');
         } catch(e) {
             console.log(e);
