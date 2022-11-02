@@ -113,9 +113,9 @@ export class DocxService {
                             children: [
                                 new TextRun({
                                     text: `FOTO ${importGroup[counter].position} - ${importGroup[counter].description}`,
-                                    bold: true,
-                                    size: 24,
-                                    font: 'Calibri'
+                                    bold: false,
+                                    size: 20,
+                                    font: 'Helvetica Neue'
                                 })
                             ]
                         });
@@ -156,9 +156,9 @@ export class DocxService {
                             children: [
                                 new TextRun({
                                     text: `FOTO ${importGroup[counter].position} - ${importGroup[counter].description}`,
-                                    bold: true,
-                                    size: 24,
-                                    font: 'Calibri'
+                                    bold: false,
+                                    size: 20,
+                                    font: 'Helvetica Neue'
                                 })
                             ]
                         });
@@ -199,9 +199,9 @@ export class DocxService {
                             children: [
                                 new TextRun({
                                     text: `FOTO ${importGroup[counter].position} - ${importGroup[counter].description}`,
-                                    bold: true,
-                                    size: 24,
-                                    font: 'Calibri'
+                                    bold: false,
+                                    size: 20,
+                                    font: 'Helvetica Neue'
                                 })
                             ]
                         });
@@ -242,9 +242,9 @@ export class DocxService {
                             children: [
                                 new TextRun({
                                     text: `FOTO ${importGroup[counter].position} - ${importGroup[counter].description}`,
-                                    bold: true,
-                                    size: 24,
-                                    font: 'Calibri'
+                                    bold: false,
+                                    size: 20,
+                                    font: 'Helvetica Neue'
                                 })
                             ]
                         });
