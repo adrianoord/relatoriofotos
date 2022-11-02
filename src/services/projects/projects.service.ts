@@ -126,9 +126,9 @@ export class ProjectsService {
 
     public insertFile(project: string, name: string, file: any) {
         return new Promise<void>((resolve, reject)=>{
-            if(!fs.existsSync(`${process.cwd()}\\projects\\${project}\\${name}`))
+            if(!fs.existsSync(join(process.cwd(), 'projects', `${project}`, `${name}`)))
             {
-                fs.writeFileSync(`${process.cwd()}\\projects\\${project}\\${name}`, file, 'base64');
+                fs.writeFileSync(join(process.cwd(), 'projects', `${project}`, `${name}`), file, 'base64');
                 resolve();
             }
             else{
@@ -141,14 +141,14 @@ export class ProjectsService {
         const isHEIC = fileName.toLocaleLowerCase().includes('.heic');
         let input: any = '';
         if(isHEIC) {
-            const inputBuffer = await promisify(fs.readFile)(`${process.cwd()}\\projects\\${project}\\${fileName}`);
+            const inputBuffer = await promisify(fs.readFile)(join(process.cwd(), 'projects', `${project}`, `${fileName}`));
             const outputBuffer = await heicConvert({
                 buffer: inputBuffer,
                 format: 'JPEG'
             });
             input = outputBuffer;
         } else {
-            input = `${process.cwd()}\\projects\\${project}\\${fileName}`;
+            input = join(process.cwd(), 'projects', `${project}`, `${fileName}`);
         }
         const image = (await sharp(input)
             .jpeg({quality:20})
@@ -160,14 +160,14 @@ export class ProjectsService {
         const isHEIC = fileName.toLocaleLowerCase().includes('.heic');
         let input: any = '';
         if(isHEIC) {
-            const inputBuffer = await promisify(fs.readFile)(`${process.cwd()}\\projects\\${project}\\${fileName}`);
+            const inputBuffer = await promisify(fs.readFile)(join(process.cwd(), 'projects', `${project}`, `${fileName}`));
             const outputBuffer = await heicConvert({
                 buffer: inputBuffer,
                 format: 'JPEG'
             });
             input = outputBuffer;
         } else {
-            input = `${process.cwd()}\\projects\\${project}\\${fileName}`;
+            input = join(process.cwd(), 'projects', `${project}`, `${fileName}`);
         }
         const image = (await sharp(input)
             .jpeg({quality:100})
