@@ -137,7 +137,11 @@ export class ProjectsService {
 
     public deleteImage(project: string, fileName: string) {
         try {
-            fs.unlinkSync(join(process.cwd(), 'projects', `${project}`, `${fileName}`));
+            console.log(!fs.existsSync(join(process.cwd(), 'lixo', `${project}`)))
+            if(!fs.existsSync(join(process.cwd(), 'lixo', `${project}`))) {
+                fs.mkdirSync(join(process.cwd(), 'lixo', `${project}`));
+            }
+            fs.renameSync(join(process.cwd(), 'projects', `${project}`, `${fileName}`), join(process.cwd(), 'lixo', `${project}`, `${fileName}`));
             this.updateProjects();
         } catch(e) {
             throw new Error(e.message);
