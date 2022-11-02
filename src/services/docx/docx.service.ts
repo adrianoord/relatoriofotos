@@ -112,7 +112,7 @@ export class DocxService {
                             alignment: AlignmentType.CENTER,
                             children: [
                                 new TextRun({
-                                    text: `FOTO ${importGroup[counter].position} - ${importGroup[counter].description}`,
+                                    text: `Foto ${importGroup[counter].position} - ${importGroup[counter].description}`,
                                     bold: false,
                                     size: 20,
                                     font: 'Helvetica Neue'
@@ -155,7 +155,7 @@ export class DocxService {
                             alignment: AlignmentType.CENTER,
                             children: [
                                 new TextRun({
-                                    text: `FOTO ${importGroup[counter].position} - ${importGroup[counter].description}`,
+                                    text: `Foto ${importGroup[counter].position} - ${importGroup[counter].description}`,
                                     bold: false,
                                     size: 20,
                                     font: 'Helvetica Neue'
@@ -198,7 +198,7 @@ export class DocxService {
                             alignment: AlignmentType.CENTER,
                             children: [
                                 new TextRun({
-                                    text: `FOTO ${importGroup[counter].position} - ${importGroup[counter].description}`,
+                                    text: `Foto ${importGroup[counter].position} - ${importGroup[counter].description}`,
                                     bold: false,
                                     size: 20,
                                     font: 'Helvetica Neue'
@@ -241,7 +241,7 @@ export class DocxService {
                             alignment: AlignmentType.CENTER,
                             children: [
                                 new TextRun({
-                                    text: `FOTO ${importGroup[counter].position} - ${importGroup[counter].description}`,
+                                    text: `Foto ${importGroup[counter].position} - ${importGroup[counter].description}`,
                                     bold: false,
                                     size: 20,
                                     font: 'Helvetica Neue'
