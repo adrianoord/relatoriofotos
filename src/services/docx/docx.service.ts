@@ -284,8 +284,8 @@ export class DocxService {
         console.log('Documento montado!');
         console.log('Criando docx - pode demorar bastante...');
         try {
-            const buffer = await Packer.toBase64String(doc);
-            fs.writeFileSync(join(process.cwd(),`${projectName}.docx`), buffer, 'base64');
+            const buffer = await Packer.toBuffer(doc);
+            fs.writeFileSync(join(process.cwd(),`${projectName}.docx`), buffer);
             console.log('Docx Criado!');
         } catch(e) {
             console.log(e);
