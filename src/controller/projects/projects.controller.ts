@@ -1,5 +1,5 @@
 import { ProjectsService } from './../../services/projects/projects.service';
-import { Controller, Get, Param, Res, Post, Put, Body } from '@nestjs/common';
+import { Controller, Get, Param, Res, Post, Put, Body, Delete } from '@nestjs/common';
 import { Response } from 'express';
 
 @Controller('projects')
@@ -30,6 +30,18 @@ export class ProjectsController {
         } catch(e) {
             console.log(e);
             return res.json({message: "Imagem não existe"}).status(404);
+        }
+    }
+
+    @Delete('image/:project/:name')
+    async deleteImage(@Param('project') project: string, @Param('name') name: string, @Res() res: Response) {
+        try {
+            this.projectsService.deleteImage(project, name);
+            return res.json({
+                message: "Imagem deletada"
+            }).status(200);
+        } catch(e) {
+            return res.json({message: e}).status(404);
         }
     }
 

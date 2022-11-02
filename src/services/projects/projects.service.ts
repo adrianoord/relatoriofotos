@@ -135,6 +135,15 @@ export class ProjectsService {
         });  
     }
 
+    public deleteImage(project: string, fileName: string) {
+        try {
+            fs.unlinkSync(join(process.cwd(), 'projects', `${project}`, `${fileName}`));
+            this.updateProjects();
+        } catch(e) {
+            throw new Error(e.message);
+        }
+    }
+
     public async getImage(project: string, fileName: string) {
         const isHEIC = fileName.toLocaleLowerCase().includes('.heic');
         let input: any = '';
