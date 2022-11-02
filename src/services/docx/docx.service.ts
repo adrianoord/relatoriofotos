@@ -32,6 +32,7 @@ export class DocxService {
     }
 
     async createDocx(projectName: string) {
+        console.log('Montando documento...')
         try {
             fs.unlinkSync(join(process.cwd(), `${projectName}.docx`));
         } catch(e){}
@@ -280,11 +281,11 @@ export class DocxService {
         const doc = new Document({
             sections
         });
-
-        console.log('Criando docx');
-        Packer.toBuffer(doc).then((buffer) => {
-            fs.writeFileSync(join(process.cwd(),`${projectName}.docx`), buffer);
-        });
+        console.log('Documento montado!');
+        console.log('Criando docx - pode demorar bastante...');
+        const buffer = await Packer.toBuffer(doc);
+        fs.writeFileSync(join(process.cwd(),`${projectName}.docx`), buffer);
+        console.log('Docx Criado!');
     }
 
     splitArrayBy(length: number, array: Array<IImport>): Array<Array<IImport>> {
