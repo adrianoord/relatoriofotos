@@ -101,16 +101,16 @@ export class ProjectsService {
     public createProject(name: string) {
         return new Promise<string | void>(async (resolve, reject)=>{
             await this.updateProjects();
-            if(!fs.existsSync(`${process.cwd()}\\projects\\${name}`))
+            if(!fs.existsSync(join(process.cwd(), 'projects', `${name}`)))
             {
                 const newProject: IProjectDB = {
                     name,
                     importacoes: []
                 }
-                fs.mkdirSync(`${process.cwd()}\\projects\\${name}`);
+                fs.mkdirSync(join(process.cwd(), 'projects', `${name}`));
                 this.database.insert(newProject);
                 await this.updateProjects();
-                resolve(`${process.cwd()}\\projects\\${name}`);
+                resolve(join(process.cwd(), 'projects', `${name}`));
             }
             else{
                 reject();
