@@ -283,9 +283,14 @@ export class DocxService {
         });
         console.log('Documento montado!');
         console.log('Criando docx - pode demorar bastante...');
-        const buffer = await Packer.toBuffer(doc);
-        fs.writeFileSync(join(process.cwd(),`${projectName}.docx`), buffer);
-        console.log('Docx Criado!');
+        try {
+            const buffer = await Packer.toBase64String(doc);
+            fs.writeFileSync(join(process.cwd(),`${projectName}.docx`), buffer, 'base64');
+            console.log('Docx Criado!');
+        } catch(e) {
+            console.log(e);
+            throw new Error('Falha ao criar documento');
+        }
     }
 
     splitArrayBy(length: number, array: Array<IImport>): Array<Array<IImport>> {
