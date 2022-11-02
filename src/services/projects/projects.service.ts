@@ -25,14 +25,12 @@ export class ProjectsService {
         });
         for(let project of this.projectsFolders) {
             const files = await this.getProjectFolderContent(project.name);
-            const order: IImport[] = [];
+            const order: IImport[] = project.importacoes;
             for(let file of files) {
                 const imported = project.importacoes.find(i=>i.fileName==file.name);
-                if(imported) {
-                    order[imported.position-1]=imported;
-                } else {
+                if(!imported) {
                     let position = order.length>0?this.max(order.map(i=>i.position))+1:1;
-                    while(project.importacoes.find(i=>i.position==position)) {
+                    while(order.find(i=>(i?i.position:null)==position)) {
                         position++;
                     }
                     const newImport: IImport = {
