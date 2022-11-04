@@ -161,7 +161,8 @@ export class ProjectsService {
             input = join(process.cwd(), 'projects', `${project}`, `${fileName}`);
         }
         const image = (await sharp(input)
-            .jpeg({quality:10})
+            .resize(1024, Math.round(1024*1.333))
+            .jpeg({quality:50})
             .toBuffer()).toString('base64');
         return image;
     }
