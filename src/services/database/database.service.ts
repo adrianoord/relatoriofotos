@@ -1,3 +1,4 @@
+import { join } from 'path';
 import { IProjectDB } from './../../interfaces/geral.interface';
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
@@ -13,7 +14,7 @@ export class DatabaseService {
 
     private loadJson() {
         try {
-            const db = JSON.parse(fs.readFileSync(process.cwd()+'/db.json', 'utf8'));
+            const db = JSON.parse(fs.readFileSync(join(process.cwd(), 'projects', 'db.json'), 'utf8'));
             if(!db) throw new Error('DB não existe');
             if(!db.projects) throw new Error('Projects não existe');
             this.projects = db.projects;
@@ -27,7 +28,7 @@ export class DatabaseService {
     public saveJson() {
         try {
             const db = {projects: this.projects};
-            fs.writeFileSync(process.cwd()+'/db.json', JSON.stringify(db),'utf8');
+            fs.writeFileSync(join(process.cwd(), 'projects', 'db.json'), JSON.stringify(db),'utf8');
         } catch(e) {
             console.log('Falha ao salvar arquivo de ')
         }
