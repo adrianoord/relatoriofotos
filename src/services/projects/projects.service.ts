@@ -66,7 +66,7 @@ export class ProjectsService {
     private getProjectFolderContent(project:string) {
         return new Promise<IFile[]>((resolve,reject)=>{
             const mapFolder = fs.readdirSync(join(process.cwd(), 'projects', project), {withFileTypes:true})
-                .filter(item=>item.isFile()&&['.jpeg', '.jpg', '.png', '.bmp', '.HEIC'].find(i=>item.name.toLocaleLowerCase().includes(i)))
+                .filter(item=>item.isFile()&&['.jpeg', '.jpg', '.png', '.bmp', '.heic'].find(i=>item.name.toLocaleLowerCase().includes(i)))
             const files: IFile[] = [];
             for(let file of mapFolder) {
                 files.push({
