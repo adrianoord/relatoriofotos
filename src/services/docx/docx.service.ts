@@ -9,17 +9,11 @@ import {
     ImageRun, 
     Paragraph,
     TextRun,
-    Table,
-    TableRow,
-    TableCell,
-    BorderStyle,
     HorizontalPositionAlign,
     HorizontalPositionRelativeFrom,
     VerticalPositionAlign,
     VerticalPositionRelativeFrom,
-    TextWrappingType,
     AlignmentType,
-    TextWrappingSide,
     FrameAnchorType,
     Packer
 } from 'docx';
@@ -76,6 +70,7 @@ export class DocxService {
             const images = [];
             const descriptions = [];
             while(counter<=importGroup.length-1) {
+                const description = `Foto ${importGroup[counter].position} ${importGroup[counter].description?'-':''} ${importGroup[counter].description}`;
                 switch(counter) {
                     case 0:
                         images[counter] = new ImageRun({
@@ -112,7 +107,7 @@ export class DocxService {
                             alignment: AlignmentType.CENTER,
                             children: [
                                 new TextRun({
-                                    text: `Foto ${importGroup[counter].position} - ${importGroup[counter].description}`,
+                                    text: description,
                                     bold: false,
                                     size: 20,
                                     font: 'Helvetica Neue'
@@ -155,7 +150,7 @@ export class DocxService {
                             alignment: AlignmentType.CENTER,
                             children: [
                                 new TextRun({
-                                    text: `Foto ${importGroup[counter].position} - ${importGroup[counter].description}`,
+                                    text: description,
                                     bold: false,
                                     size: 20,
                                     font: 'Helvetica Neue'
@@ -198,7 +193,7 @@ export class DocxService {
                             alignment: AlignmentType.CENTER,
                             children: [
                                 new TextRun({
-                                    text: `Foto ${importGroup[counter].position} - ${importGroup[counter].description}`,
+                                    text: description,
                                     bold: false,
                                     size: 20,
                                     font: 'Helvetica Neue'
@@ -241,7 +236,7 @@ export class DocxService {
                             alignment: AlignmentType.CENTER,
                             children: [
                                 new TextRun({
-                                    text: `Foto ${importGroup[counter].position} - ${importGroup[counter].description}`,
+                                    text: description,
                                     bold: false,
                                     size: 20,
                                     font: 'Helvetica Neue'
