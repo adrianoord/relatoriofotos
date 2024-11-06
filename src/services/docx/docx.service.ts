@@ -2,11 +2,11 @@ import { IImport } from './../../interfaces/geral.interface';
 import { join } from 'path';
 import { ProjectsService } from './../projects/projects.service';
 import { Injectable } from '@nestjs/common';
-import { 
+import {
     Document,
     ISectionOptions,
     Header,
-    ImageRun, 
+    ImageRun,
     Paragraph,
     TextRun,
     HorizontalPositionAlign,
@@ -25,14 +25,14 @@ export class DocxService {
     constructor(private projects: ProjectsService) {
     }
 
-    async createDocx(projectName: string) {
-        console.log('Montando documento...')
+    async createDocx(projectName: string, layout: number) {
+        console.log(`Montando documento... Layout ${layout} por página`)
         try {
             fs.unlinkSync(join(process.cwd(), `${projectName}.docx`));
-        } catch(e){}
+        } catch (e) { }
         const projects = await this.projects.getProjects();
-        const project = projects.find(i=>i.name==projectName);
-        if(!project) return;
+        const project = projects.find(i => i.name == projectName);
+        if (!project) return;
         const header = new Header({
             children: [
                 new Paragraph({
@@ -57,44 +57,163 @@ export class DocxService {
                 })
             ]
         });
-        
-        const sections: ISectionOptions[] = [];
-        const width = 250;
-        const height = 333;
-        let counter = 0;
-        
-        const importacoes = this.splitArrayBy(4, project.importacoes);
 
-        for(const importGroup of importacoes) {
-            counter=0;
+        const sections: ISectionOptions[] = [];
+        let counter = 0;
+
+        const importacoes = this.splitArrayBy(layout, project.importacoes);
+
+        const layoutConfig = {
+            2: [
+                {
+                    x: 2637.5,
+                    y: 5250,
+                    width: 3700,
+                    height: 1000,
+                    image: {
+                        width: 525,
+                        height: 350
+                    },
+                    floating: {
+                        horizontalPosition: {
+                            relative: HorizontalPositionRelativeFrom.MARGIN,
+                            align: HorizontalPositionAlign.CENTER
+                        },
+                        verticalPosition: {
+                            relative: VerticalPositionRelativeFrom.MARGIN,
+                            align: VerticalPositionAlign.TOP
+                        }
+                    }
+                },
+                {
+                    x: 2637.5,
+                    y: 11650,
+                    width: 3700,
+                    height: 1000,
+                    image: {
+                        width: 525,
+                        height: 350
+                    },
+                    floating: {
+                        horizontalPosition: {
+                            relative: HorizontalPositionRelativeFrom.MARGIN,
+                            align: HorizontalPositionAlign.CENTER
+                        },
+                        verticalPosition: {
+                            relative: VerticalPositionRelativeFrom.MARGIN,
+                            align: VerticalPositionAlign.BOTTOM
+                        }
+                    }
+                }
+            ],
+            4: [
+                {
+                    x: 25,
+                    y: 5000,
+                    width: 3700,
+                    height: 1000,
+                    image: {
+                        width: 250,
+                        height: 333
+                    },
+                    floating: {
+                        horizontalPosition: {
+                            relative: HorizontalPositionRelativeFrom.MARGIN,
+                            align: HorizontalPositionAlign.LEFT
+                        },
+                        verticalPosition: {
+                            relative: VerticalPositionRelativeFrom.MARGIN,
+                            align: VerticalPositionAlign.TOP
+                        }
+                    }
+                },
+                {
+                    x: 5300,
+                    y: 5000,
+                    width: 3700,
+                    height: 1000,
+                    image: {
+                        width: 250,
+                        height: 333
+                    },
+                    floating: {
+                        horizontalPosition: {
+                            relative: HorizontalPositionRelativeFrom.MARGIN,
+                            align: HorizontalPositionAlign.RIGHT
+                        },
+                        verticalPosition: {
+                            relative: VerticalPositionRelativeFrom.MARGIN,
+                            align: VerticalPositionAlign.TOP
+                        }
+                    }
+                },
+                {
+                    x: 25,
+                    y: 11650,
+                    width: 3700,
+                    height: 1000,
+                    image: {
+                        width: 250,
+                        height: 333
+                    },
+                    floating: {
+                        horizontalPosition: {
+                            relative: HorizontalPositionRelativeFrom.MARGIN,
+                            align: HorizontalPositionAlign.LEFT
+                        },
+                        verticalPosition: {
+                            relative: VerticalPositionRelativeFrom.MARGIN,
+                            align: VerticalPositionAlign.BOTTOM
+                        }
+                    }
+                },
+                {
+                    x: 5300,
+                    y: 11650,
+                    width: 3700,
+                    height: 1000,
+                    image: {
+                        width: 250,
+                        height: 333
+                    },
+                    floating: {
+                        horizontalPosition: {
+                            relative: HorizontalPositionRelativeFrom.MARGIN,
+                            align: HorizontalPositionAlign.RIGHT
+                        },
+                        verticalPosition: {
+                            relative: VerticalPositionRelativeFrom.MARGIN,
+                            align: VerticalPositionAlign.BOTTOM
+                        }
+                    }
+                }
+            ]
+        }
+
+        for (const importGroup of importacoes) {
+            counter = 0;
             const images = [];
             const descriptions = [];
-            while(counter<=importGroup.length-1) {
-                const description = `Foto ${importGroup[counter].position} ${importGroup[counter].description?'-':''} ${importGroup[counter].description}`;
-                switch(counter) {
+            while (counter <= importGroup.length - 1) {
+                const description = `Foto ${importGroup[counter].position} ${importGroup[counter].description ? '-' : ''} ${importGroup[counter].description}`;
+                switch (counter) {
                     case 0:
                         images[counter] = new ImageRun({
                             data: await this.projects.getImageBuffer(project.name, importGroup[counter].fileName),
-                            transformation: {width,height},
-                            floating: {
-                                horizontalPosition: {
-                                    relative: HorizontalPositionRelativeFrom.MARGIN,
-                                    align: HorizontalPositionAlign.LEFT
-                                },
-                                verticalPosition: {
-                                    relative: VerticalPositionRelativeFrom.MARGIN,
-                                    align: VerticalPositionAlign.TOP
-                                }
-                            }
+                            transformation: { 
+                                width: layoutConfig[layout][counter].image.width,
+                                height: layoutConfig[layout][counter].image.height
+                            },
+                            floating: layoutConfig[layout][counter].floating
                         });
                         descriptions[counter] = new Paragraph({
                             frame: {
                                 position: {
-                                    x: 25,
-                                    y: 5000,
+                                    x: layoutConfig[layout][counter].x,
+                                    y: layoutConfig[layout][counter].y,
                                 },
-                                width: 3700,
-                                height: 1000,
+                                width: layoutConfig[layout][counter].width,
+                                height: layoutConfig[layout][counter].height,
                                 anchor: {
                                     horizontal: FrameAnchorType.MARGIN,
                                     vertical: FrameAnchorType.MARGIN,
@@ -118,26 +237,20 @@ export class DocxService {
                     case 1:
                         images[counter] = new ImageRun({
                             data: await this.projects.getImageBuffer(project.name, importGroup[counter].fileName),
-                            transformation: {width,height},
-                            floating: {
-                                horizontalPosition: {
-                                    relative: HorizontalPositionRelativeFrom.MARGIN,
-                                    align: HorizontalPositionAlign.RIGHT
-                                },
-                                verticalPosition: {
-                                    relative: VerticalPositionRelativeFrom.MARGIN,
-                                    align: VerticalPositionAlign.TOP
-                                }
-                            }
+                            transformation: { 
+                                width: layoutConfig[layout][counter].image.width,
+                                height: layoutConfig[layout][counter].image.height
+                            },
+                            floating: layoutConfig[layout][counter].floating
                         });
                         descriptions[counter] = new Paragraph({
                             frame: {
                                 position: {
-                                    x: 5300,
-                                    y: 5000,
+                                    x: layoutConfig[layout][counter].x,
+                                    y: layoutConfig[layout][counter].y,
                                 },
-                                width: 3700,
-                                height: 1000,
+                                width: layoutConfig[layout][counter].width,
+                                height: layoutConfig[layout][counter].height,
                                 anchor: {
                                     horizontal: FrameAnchorType.MARGIN,
                                     vertical: FrameAnchorType.MARGIN,
@@ -161,26 +274,20 @@ export class DocxService {
                     case 2:
                         images[counter] = new ImageRun({
                             data: await this.projects.getImageBuffer(project.name, importGroup[counter].fileName),
-                            transformation: {width,height},
-                            floating: {
-                                horizontalPosition: {
-                                    relative: HorizontalPositionRelativeFrom.MARGIN,
-                                    align: HorizontalPositionAlign.LEFT
-                                },
-                                verticalPosition: {
-                                    relative: VerticalPositionRelativeFrom.MARGIN,
-                                    align: VerticalPositionAlign.BOTTOM
-                                }
-                            }
+                            transformation: { 
+                                width: layoutConfig[layout][counter].image.width,
+                                height: layoutConfig[layout][counter].image.height
+                            },
+                            floating: layoutConfig[layout][counter].floating
                         });
                         descriptions[counter] = new Paragraph({
                             frame: {
                                 position: {
-                                    x: 25,
-                                    y: 11650,
+                                    x: layoutConfig[layout][counter].x,
+                                    y: layoutConfig[layout][counter].y,
                                 },
-                                width: 3700,
-                                height: 1000,
+                                width: layoutConfig[layout][counter].width,
+                                height: layoutConfig[layout][counter].height,
                                 anchor: {
                                     horizontal: FrameAnchorType.MARGIN,
                                     vertical: FrameAnchorType.MARGIN,
@@ -204,26 +311,20 @@ export class DocxService {
                     case 3:
                         images[counter] = new ImageRun({
                             data: await this.projects.getImageBuffer(project.name, importGroup[counter].fileName),
-                            transformation: {width,height},
-                            floating: {
-                                horizontalPosition: {
-                                    relative: HorizontalPositionRelativeFrom.MARGIN,
-                                    align: HorizontalPositionAlign.RIGHT
-                                },
-                                verticalPosition: {
-                                    relative: VerticalPositionRelativeFrom.MARGIN,
-                                    align: VerticalPositionAlign.BOTTOM
-                                }
-                            }
+                            transformation: { 
+                                width: layoutConfig[layout][counter].image.width,
+                                height: layoutConfig[layout][counter].image.height
+                            },
+                            floating: layoutConfig[layout][counter].floating
                         });
                         descriptions[counter] = new Paragraph({
                             frame: {
                                 position: {
-                                    x: 5300,
-                                    y: 11650,
+                                    x: layoutConfig[layout][counter].x,
+                                    y: layoutConfig[layout][counter].y,
                                 },
-                                width: 3700,
-                                height: 1000,
+                                width: layoutConfig[layout][counter].width,
+                                height: layoutConfig[layout][counter].height,
                                 anchor: {
                                     horizontal: FrameAnchorType.MARGIN,
                                     vertical: FrameAnchorType.MARGIN,
@@ -248,17 +349,29 @@ export class DocxService {
                 counter++;
             }
             const paragraphs = [];
-            paragraphs[0] = new Paragraph({
-                children: [images[0],images[1]]
-            });
-            paragraphs[1] = new Paragraph({
-                children: [images[2],images[3]]
-            });
+
+            switch(layout) {
+                case 2:
+                    paragraphs.push(new Paragraph({
+                        children: [images[0]]
+                    }));
+                    paragraphs.push(new Paragraph({
+                        children: [images[1]]
+                    }));
+                case 4:
+                    paragraphs.push(new Paragraph({
+                        children: [images[0], images[1]]
+                    }));
+                    paragraphs.push(new Paragraph({
+                        children: [images[2], images[3]]
+                    }));
+                    break;
+            }
             const section: ISectionOptions = {
                 headers: {
                     default: header
                 },
-                children: [...paragraphs,...descriptions],
+                children: [...paragraphs, ...descriptions],
                 properties: {
                     page: {
                         margin: {
@@ -280,11 +393,11 @@ export class DocxService {
         console.log('Criando docx - pode demorar bastante...');
         try {
             const buffer = await Packer.toStream(doc);
-            let to_stream   = fs.createWriteStream(join(process.cwd(),`${projectName}.docx`));
+            let to_stream = fs.createWriteStream(join(process.cwd(), `${projectName}.docx`));
 
             let written = 0;
             const promises = await Promise.all([
-                new Promise((resolve)=>{
+                new Promise((resolve) => {
                     let timeout = setTimeout(resolve, 1000);
                     buffer.on('data', data => {
                         // do the piping manually here.
@@ -299,7 +412,7 @@ export class DocxService {
             ])
             to_stream.close();
             console.log('Docx Criado!');
-        } catch(e) {
+        } catch (e) {
             console.log(e);
             throw new Error('Falha ao criar documento');
         }
@@ -307,7 +420,7 @@ export class DocxService {
 
     splitArrayBy(length: number, array: Array<IImport>): Array<Array<IImport>> {
         const newArray = [];
-        for(let i=0;i<array.length;i+length) {
+        for (let i = 0; i < array.length; i + length) {
             newArray.push(array.splice(i, length))
         }
         return newArray;

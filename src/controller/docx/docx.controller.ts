@@ -1,16 +1,16 @@
 import { DocxService } from './../../services/docx/docx.service';
-import { Controller, Get, Param, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Req, Controller, Param, Post, Res } from '@nestjs/common';
+import { Response, Request } from 'express';
 import { join } from 'path';
 
 @Controller('docx')
 export class DocxController {
     constructor(private docxService: DocxService) {}
 
-    @Get(':project')
-    async getProject(@Param('project') projectName: string, @Res() res: Response) {
+    @Post(':project')
+    async generateDocx(@Param('project') projectName: string, @Res() res: Response, @Req() req: Request) {
         try {
-            await this.docxService.createDocx(projectName);
+            await this.docxService.createDocx(projectName, req.body.layout);
             return res.status(201).json({
                 message:`Documento criado! ${join(process.cwd(), `${projectName}.docx`)}`
             });
