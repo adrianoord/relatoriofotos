@@ -192,7 +192,7 @@ export class ProjectsService {
             input = join(process.cwd(), 'projects', `${project}`, `${fileName}`);
         }
         const image = (await sharp(input)
-            .jpeg({quality:100})
+            .jpeg({quality:50})
             .toBuffer());
         return image;
     }
