@@ -66,9 +66,9 @@ export class DocxService {
         const layoutConfig = {
             2: [
                 {
-                    x: 2637.5,
-                    y: 5250,
-                    width: 3700,
+                    x: 1318.75,
+                    y: 5325,
+                    width: 6275,
                     height: 1000,
                     image: {
                         width: 525,
@@ -86,9 +86,9 @@ export class DocxService {
                     }
                 },
                 {
-                    x: 2637.5,
+                    x: 1318.75,
                     y: 11650,
-                    width: 3700,
+                    width: 6275,
                     height: 1000,
                     image: {
                         width: 525,

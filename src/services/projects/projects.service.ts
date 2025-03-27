@@ -160,11 +160,22 @@ export class ProjectsService {
         } else {
             input = join(process.cwd(), 'projects', `${project}`, `${fileName}`);
         }
-        const image = (await sharp(input)
-            .resize(1024, Math.round(1024*1.333))
+
+        const metadata = await sharp(input).metadata();
+        if(metadata.width>1024) {
+            const orientation = metadata.orientation;
+            return (await sharp(input)
+                .rotate()
+                .resize(1024, Math.round(1024*(orientation==6?metadata.width/metadata.height:metadata.height/metadata.width)))
+                .jpeg({quality:50})
+                .toBuffer())
+                .toString('base64');
+        }
+        return (await sharp(input)
+            .rotate()  
             .jpeg({quality:50})
-            .toBuffer()).toString('base64');
-        return image;
+            .toBuffer())
+            .toString('base64');
     }
 
     public async getImageBuffer(project: string, fileName: string) {
