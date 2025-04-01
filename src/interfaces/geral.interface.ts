@@ -2,6 +2,7 @@ export interface IProjectDB {
     id?: number;
     name: string;
     importacoes: Array<IImport>;
+    startId?: number;
 }
 
 export interface IImport {
